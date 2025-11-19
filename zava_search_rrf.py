@@ -23,14 +23,13 @@ search_client = SearchClient(
     credential=azure_credential,
 )
 
-search_query = "100 foot hose that wont break"
+search_query = "100 foot hose that won't break"
 
-#search_query = "water plants efficiently without waste"
 search_vector = openai_client.embeddings.create(
     model=os.environ["AZURE_OPENAI_EMBEDDING_DEPLOYMENT"],
     input=search_query).data[0].embedding
 
-results = list(search_client.search(search_query, top=5, vector_queries=[
-    VectorizedQuery(vector=search_vector, k_nearest_neighbors=50, fields="embedding")]))
+results = search_client.search(search_query, top=5, vector_queries=[
+    VectorizedQuery(vector=search_vector, k_nearest_neighbors=50, fields="embedding")])
 
 render_product_results(results, f"Hybrid RRF search results for '{search_query}'")

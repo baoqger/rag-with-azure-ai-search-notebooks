@@ -17,7 +17,6 @@ search_client = SearchClient(
 )
 
 search_query = "25 foot hose"
-search_query = "water plants efficiently without waste"
 
 results = search_client.search(search_text=search_query, top=5)
 

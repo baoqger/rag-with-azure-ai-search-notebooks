@@ -23,17 +23,18 @@ search_client = SearchClient(
     credential=azure_credential,
 )
 
-search_query = "100 foot hose that wont break"
+search_query = "100 foot hose that won't break"
+
 search_vector = openai_client.embeddings.create(
     model=os.environ["AZURE_OPENAI_EMBEDDING_DEPLOYMENT"],
     input=search_query).data[0].embedding
 
-results = list(search_client.search(
+results = search_client.search(
     search_query,
     top=5,
     vector_queries=[
         VectorizedQuery(vector=search_vector, k_nearest_neighbors=50, fields="embedding")],
     query_type="semantic",
-    semantic_configuration_name="products-semantic-config"))
+    semantic_configuration_name="products-semantic-config")
 
 render_product_results(results, f"Hybrid Search with Reranker Results for '{search_query}'", show_reranker=True)

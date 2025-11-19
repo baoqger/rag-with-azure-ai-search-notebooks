@@ -132,19 +132,10 @@ def create_index(index_client: SearchIndexClient, index_name: str) -> None:
         index_client: Azure Search Index Client
         index_name: Name of the index to create
     """
-    print(f"Checking if index '{index_name}' exists...")
-    
-    existing_indexes = [index.name for index in index_client.list_indexes()]
-    
-    if index_name in existing_indexes:
-        print(f"Index '{index_name}' already exists. Deleting it...")
-        index_client.delete_index(index_name)
-        print(f"Index '{index_name}' deleted.")
-    
-    print(f"Creating index '{index_name}'...")
+    print(f"Creating or updating index '{index_name}'...")
     index_schema = create_product_index_schema(index_name)
-    index_client.create_index(index_schema)
-    print(f"Index '{index_name}' created successfully.")
+    index_client.create_or_update_index(index_schema)
+    print(f"Index '{index_name}' created/updated successfully.")
 
 
 def generate_embeddings(openai_client: OpenAI, products: list[dict[str, Any]]) -> None:

@@ -7,3 +7,4 @@ python-dotenv
 pillow
 azure-ai-evaluation
 ipykernel
+rich
