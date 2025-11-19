@@ -4,14 +4,14 @@ This repository contains many notebooks that explain how Azure AI Search works, 
 
 ## Environment setup
 
-1. Run `azd up` on [azure-search-openai-demo](https://github.com/Azure-Samples/azure-search-openai-demo/) with GPT-4-vision enabled. This will create the necessary resources for the Azure OpenAI, Azure AI Search services, and the Computer Vision service.
+1. Run `azd up` on [azure-search-openai-demo](https://github.com/Azure-Samples/azure-search-openai-demo/) with multimodal feature enabled. This will create the necessary resources for the Azure OpenAI, Azure AI Search services, and the Azure AI Vision service.
 
 2. Create a .env with these variables, and the values taken from `.azure/ENV-NAME/.env`
 
     ```shell
     AZURE_OPENAI_SERVICE=YOUR-SERVICE-NAME
     AZURE_OPENAI_DEPLOYMENT_NAME=YOUR-OPENAI-DEPLOYMENT-NAME
-    AZURE_OPENAI_ADA_DEPLOYMENT=YOUR-EMBED-DEPLOYMENT-NAME
+    AZURE_OPENAI_EMBEDDING_DEPLOYMENT=YOUR-EMBED-DEPLOYMENT-NAME
     AZURE_SEARCH_SERVICE=YOUR-SEARCH-SERVICE-NAME
     AZURE_COMPUTERVISION_SERVICE=YOUR-COMPUTERVISION-SERVICE-NAME
     ```
@@ -25,7 +25,7 @@ This repository contains many notebooks that explain how Azure AI Search works, 
 4. If you deployed your resource group to a tenant other than your home tenant, set the tenant ID:
 
     ```shell
-    export TENANT_ID=YOUR-TENANT-ID
+    AZURE_TENANT_ID=YOUR-TENANT-ID
     ```
 
 5. Create a Python virtual environment or open the project in a container.
@@ -36,9 +36,9 @@ This repository contains many notebooks that explain how Azure AI Search works, 
     pip install -r requirements.txt
     ```
 
-## Notebooks
+## Search on documents
 
-These are the available notebooks, in suggested order:
+These notebooks operate on the index from the [azure-search-openai-demo](https://github.com/Azure-Samples/azure-search-openai-demo/) repository, which contains chunked documents from a fictional company.
 
 * [Vector Embeddings Notebook](./vector_embeddings.ipynb)
 * [Azure AI Search Notebook](./azure_ai_search.ipynb)
@@ -48,3 +48,19 @@ These are the available notebooks, in suggested order:
 * [RAG Evaluation](./rag_eval.ipynb)
 
 You can find video recordings going through the notebooks [here](https://github.com/microsoft/aitour-rag-with-ai-search/tree/main/session-delivery-resources#video-recordings).
+
+## Search on product catalog
+
+You can also try out search techniques on a Zava product catalog.
+First, create the search index and upload the products by running:
+
+```shell
+python zava_product_upload.py
+```
+
+Then, explore the different search techniques with these Python scripts:
+
+* [Keyword Search](./zava_search_keyword.py)
+* [Vector Search](./zava_search_vector.py)
+* [Hybrid Search with RRF](./zava_search_rrf.py)
+* [Hybrid Search with RRF + Reranker](./zava_search_reranker.py)
