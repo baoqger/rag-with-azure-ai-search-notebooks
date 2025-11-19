@@ -5,5 +5,5 @@ azure-identity
 azure-search-documents
 python-dotenv
 pillow
-promptflow-evals
+azure-ai-evaluation
 ipykernel
