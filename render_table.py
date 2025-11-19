@@ -32,13 +32,15 @@ def render_product_results(results: list[dict[str, Any]], title: str, show_reran
         ]
         if show_reranker:
             row.append(f"{doc['@search.reranker_score']:.3f}")
-        row.extend([
-            doc["name"],
-            doc["description"][:80] + "..." if len(doc["description"]) > 80 else doc["description"],
-            ", ".join(doc["categories"]),
-            f"${doc['price']:.2f}",
-            doc["sku"],
-        ])
+        row.extend(
+            [
+                doc["name"],
+                doc["description"][:80] + "..." if len(doc["description"]) > 80 else doc["description"],
+                ", ".join(doc["categories"]),
+                f"${doc['price']:.2f}",
+                doc["sku"],
+            ]
+        )
         table.add_row(*row)
 
     console.print(table)
