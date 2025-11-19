@@ -25,13 +25,7 @@ This repository contains many notebooks that explain how Azure AI Search works, 
 
 4. Create a Python virtual environment or open the project in a container.
 
-    ```shell
-    AZURE_TENANT_ID=YOUR-TENANT-ID
-    ```
-
-5. Create a Python virtual environment or open the project in a container.
-
-6. Install the requirements:
+5. Install the requirements:
 
     ```shell
     pip install -r requirements.txt
