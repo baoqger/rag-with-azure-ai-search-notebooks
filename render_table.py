@@ -6,7 +6,7 @@ from rich.console import Console
 from rich.table import Table
 
 
-def render_product_results(results: list[dict[str, Any]], title: str, show_reranker: bool = False) -> None:
+def render_product_results(results: list[dict[str, Any]], title: str = "", show_reranker: bool = False) -> None:
     """Render product search results as a rich table.
 
     Args:
@@ -21,10 +21,9 @@ def render_product_results(results: list[dict[str, Any]], title: str, show_reran
     if show_reranker:
         table.add_column("Reranker", justify="right", style="red", width=8)
     table.add_column("Name", style="magenta", width=25)
-    table.add_column("Description", style="white", width=50)
+    table.add_column("Description", style="black", width=50)
     table.add_column("Categories", style="blue", width=20)
     table.add_column("Price", justify="right", style="yellow", width=8)
-    table.add_column("SKU", style="green", width=12)
 
     for doc in list(results):
         row = [
@@ -38,7 +37,6 @@ def render_product_results(results: list[dict[str, Any]], title: str, show_reran
                 doc["description"][:80] + "..." if len(doc["description"]) > 80 else doc["description"],
                 ", ".join(doc["categories"]),
                 f"${doc['price']:.2f}",
-                doc["sku"],
             ]
         )
         table.add_row(*row)
