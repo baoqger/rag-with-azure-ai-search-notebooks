@@ -53,9 +53,9 @@ First, create the search index and upload the products by running:
 python zava_product_upload.py
 ```
 
-Then, explore the different search techniques with these Python scripts:
+Then, explore the different search techniques with these Python scripts or notebooks:
 
-* [Keyword Search](./zava_search_keyword.py)
-* [Vector Search](./zava_search_vector.py)
-* [Hybrid Search with RRF](./zava_search_rrf.py)
-* [Hybrid Search with RRF + Reranker](./zava_search_reranker.py)
+* [Keyword Search](./zava_search_keyword.py) | [Notebook](./zava_search_keyword.ipynb)
+* [Vector Search](./zava_search_vector.py) | [Notebook](./zava_search_vector.ipynb)
+* [Hybrid Search with RRF](./zava_search_rrf.py) | [Notebook](./zava_search_rrf.ipynb)
+* [Hybrid Search with RRF + Reranker](./zava_search_reranker.py) | [Notebook](./zava_search_reranker.ipynb)
