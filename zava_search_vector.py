@@ -37,4 +37,4 @@ results = search_client.search(
     None, top=5, vector_queries=[VectorizedQuery(vector=search_vector, k_nearest_neighbors=50, fields="embedding")]
 )
 
-render_product_results(results, f"Vector search results for '{search_query}'")
+render_product_results(results)

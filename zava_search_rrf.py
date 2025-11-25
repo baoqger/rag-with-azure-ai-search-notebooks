@@ -39,4 +39,4 @@ results = search_client.search(
     vector_queries=[VectorizedQuery(vector=search_vector, k_nearest_neighbors=50, fields="embedding")],
 )
 
-render_product_results(results, f"Hybrid RRF search results for '{search_query}'")
+render_product_results(results)
