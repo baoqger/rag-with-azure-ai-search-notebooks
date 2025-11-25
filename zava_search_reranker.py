@@ -41,4 +41,4 @@ results = search_client.search(
     semantic_configuration_name="products-semantic-config",
 )
 
-render_product_results(results, f"Hybrid Search with Reranker Results for '{search_query}'", show_reranker=True)
+render_product_results(results, show_reranker=True)
