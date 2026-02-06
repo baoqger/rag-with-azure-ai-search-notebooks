@@ -4,7 +4,7 @@ import json
 import os
 from typing import Any
 
-import azure.identity
+from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 import dotenv
 from azure.search.documents import SearchClient
 from azure.search.documents.indexes import SearchIndexClient
@@ -23,7 +23,8 @@ from azure.search.documents.indexes.models import (
     VectorSearch,
     VectorSearchProfile,
 )
-from openai import OpenAI
+from openai import AzureOpenAI
+from azure.core.credentials import AzureKeyCredential
 
 dotenv.load_dotenv()
 
@@ -138,7 +139,7 @@ def create_index(index_client: SearchIndexClient, index_name: str) -> None:
     print(f"Index '{index_name}' created/updated successfully.")
 
 
-def generate_embeddings(openai_client: OpenAI, products: list[dict[str, Any]]) -> None:
+def generate_embeddings(openai_client: AzureOpenAI, products: list[dict[str, Any]]) -> None:
     """Generate embeddings for products using OpenAI.
 
     Args:
@@ -153,7 +154,7 @@ def generate_embeddings(openai_client: OpenAI, products: list[dict[str, Any]]) -
 
         # Generate embedding
         response = openai_client.embeddings.create(
-            model=os.environ["AZURE_OPENAI_EMBEDDING_DEPLOYMENT"], input=text_to_embed
+            model=os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYED_MODEL_NAME"), input=text_to_embed
         )
         product["embedding"] = response.data[0].embedding
 
@@ -184,30 +185,32 @@ def upload_products(search_client: SearchClient, products: list[dict[str, Any]])
 
 def main() -> None:
     """Main function to create index and upload products."""
-    # Get configuration from environment
-    search_service = os.environ["AZURE_SEARCH_SERVICE"]
-    index_name = "zava-products-index"
-    tenant_id = os.environ["AZURE_TENANT_ID"]
+    # Load Azure Search environment variables
+    AZURE_SEARCH_ENDPOINT = os.getenv("AZURE_SEARCH_SERVICE_ENDPOINT")
+    AZURE_SEARCH_INDEX_NAME = os.getenv("AZURE_SEARCH_INDEX_NAME")
+    AZURE_SEARCH_ADMIN_KEY = os.getenv("AZURE_SEARCH_ADMIN_KEY")
+    # Load Azure OpenAI environment variables
+    AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
+    AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")    
 
-    # Create credential
-    azure_credential = azure.identity.AzureCliCredential(tenant_id=tenant_id)
+    azure_credential=AzureKeyCredential(AZURE_SEARCH_ADMIN_KEY)
 
-    # Create token provider for OpenAI
-    token_provider = azure.identity.get_bearer_token_provider(
-        azure_credential, "https://cognitiveservices.azure.com/.default"
+    openai_client = AzureOpenAI(
+        api_key=AZURE_OPENAI_API_KEY,
+        azure_endpoint=AZURE_OPENAI_ENDPOINT,
+        api_version="2024-10-21"
     )
 
-    # Create clients
-    search_endpoint = f"https://{search_service}.search.windows.net"
-    index_client = SearchIndexClient(endpoint=search_endpoint, credential=azure_credential)
-    search_client = SearchClient(endpoint=search_endpoint, index_name=index_name, credential=azure_credential)
-
-    openai_client = OpenAI(
-        base_url=f"https://{os.environ['AZURE_OPENAI_SERVICE']}.openai.azure.com/openai/v1", api_key=token_provider
+    # Create index search clients
+    index_client = SearchIndexClient(endpoint=AZURE_SEARCH_ENDPOINT, credential=azure_credential)
+    search_client = SearchClient(
+        endpoint=AZURE_SEARCH_ENDPOINT,
+        index_name=AZURE_SEARCH_INDEX_NAME,
+        credential=azure_credential
     )
 
     # Create the index
-    create_index(index_client, index_name)
+    create_index(index_client, AZURE_SEARCH_INDEX_NAME)
 
     # Load product data
     print("Loading product data from product_data_flat.json...")
@@ -222,7 +225,7 @@ def main() -> None:
     upload_products(search_client, products)
 
     print("\n✓ All operations completed successfully!")
-    print(f"  - Index: {index_name}")
+    print(f"  - Index: {AZURE_SEARCH_INDEX_NAME}")
     print(f"  - Products uploaded: {len(products)}")
 
 
